@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Analytics Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+            background: #f7f9fc;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .chart-container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgb(0 0 0 / 0.1);
+            margin-bottom: 50px;
+        }
+        canvas {
+            max-width: 100%;
+            height: 400px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Project Analytics Dashboard</h1>
+
+    <div class="chart-container">
+        <h2>Burndown Chart</h2>
+        <canvas id="burndownChart"></canvas>
+    </div>
+
+    <div class="chart-container">
+        <h2>Completed Tasks Over Time</h2>
+        <canvas id="completedTasksChart"></canvas>
+    </div>
+
+    <div class="chart-container">
+        <h2>Missed Deadlines Over Time</h2>
+        <canvas id="missedDeadlinesChart"></canvas>
+    </div>
+
+<script>
+  // Helper to fetch and log chart data
+  async function fetchChartData(url) {
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      console.log('Data from:', url, data);
+      return data;
+    } catch (error) {
+      console.error('Fetch error:', url, error);
+      return [];
+    }
+  }
+
+  // Burndown Chart
+  fetchChartData('/api/analytics/burndown/?project_id=1').then(data => {
+    const ctx = document.getElementById('burndownChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: data.map(d => d.date),
+        datasets: [{
+          label: 'Remaining Tasks',
+          data: data.map(d => d.remaining_tasks_count),
+          borderColor: 'rgba(75, 192, 192, 1)',
+          fill: false,
+          tension: 0.2
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: { y: { beginAtZero: true } }
+      }
+    });
+  });
+
+  // Completed Tasks Chart
+  fetchChartData('/api/analytics/completed_tasks/?project_id=1').then(data => {
+    const ctx = document.getElementById('completedTasksChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: data.map(d => d.date),
+        datasets: [{
+          label: 'Completed Tasks',
+          data: data.map(d => d.completed_tasks_count),
+          backgroundColor: 'rgba(54, 162, 235, 0.6)',
+          borderColor: 'rgba(54, 162, 235, 1)',
+          borderWidth: 1,
+          borderRadius: 5
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: { y: { beginAtZero: true, precision: 0 } }
+      }
+    });
+  });
+
+  // Missed Deadlines Chart
+  fetchChartData('/api/analytics/missed_deadlines/?project_id=1').then(data => {
+    const ctx = document.getElementById('missedDeadlinesChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: data.map(d => d.date),
+        datasets: [{
+          label: 'Missed Deadlines',
+          data: data.map(d => d.missed_tasks_count),
+          borderColor: 'rgba(255, 99, 132, 1)',
+          fill: false,
+          tension: 0.2
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: { y: { beginAtZero: true } }
+      }
+    });
+  });
+</script>
+
+
+</body>
+</html>

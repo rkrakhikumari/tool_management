@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'djoser',
     'core',
     'channels',
+    'analytics',
+    
    
 ]
 
@@ -60,6 +62,9 @@ REST_FRAMEWORK = {
         'user': '1000/day',
     }
 }
+
+
+
 
 from datetime import timedelta
 SIMPLE_JWT = {

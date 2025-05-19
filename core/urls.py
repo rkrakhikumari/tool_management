@@ -18,9 +18,10 @@ router.register(r'activity-logs', ActivityLogViewSet)
 urlpatterns = [
     path('api/', include(router.urls)),
     path('',home, name="home"),
-    path("analytics/tasks-completed/", TasksCompletedPerDay.as_view()),
-    path("analytics/member-productivity/", MemberProductivity.as_view()),
-    path("analytics/missed-deadlines/", MissedDeadlines.as_view()),
-    path("analytics/burndown-chart/", BurnDownChart.as_view()),
+    path("analytics/tasks-completed/", TasksCompletedPerDay.as_view(), name="tasks_completed"),
+    path("analytics/member-productivity/", MemberProductivity.as_view(), name="member_productivity"),
+    path("analytics/missed-deadlines/", MissedDeadlines.as_view(), name="missed_deadlines"),
+    path("analytics/burndown-chart/", BurnDownChart.as_view(), name="burndown_chart"),
+
 ]
 

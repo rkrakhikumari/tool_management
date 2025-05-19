@@ -12,8 +12,16 @@ from rest_framework.views import APIView
 from django.db.models import Count
 from django.shortcuts import render
 
+
+
 def home(request):
-    return render(request, 'core/home.html')
+    context = {
+        'title': 'TaskManager Home',
+        'app_name': 'TaskManager',
+        'welcome_message': 'Manage your organizations, projects, and tasks efficiently.'
+    }
+    return render(request, 'core/home.html', context)
+
 
 class OrganizationViewSet(viewsets.ModelViewSet):
     queryset = Organization.objects.all()
